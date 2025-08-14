@@ -1,0 +1,31 @@
+import React from "react";
+import ReactPlayer from "react-player";
+
+import "./style.scss";
+
+const VideoPopup = ({ show, setShow, videoId, setVideoId }) => {
+  const hidePopup = () => {
+    setShow(false);
+    setVideoId(null);
+  };
+  return (
+    <div className={`videoPopup ${show ? "visible" : ""}`}>
+      <div className="opacityLayer" onClick={hidePopup}></div>
+      <div className="videoPlayer">
+        <span className="closeBtn" onClick={hidePopup}>
+          Close
+        </span>
+        <ReactPlayer
+          url={`https://www.youtube.com/watch?v=${videoId}`}
+          // url={'www.themoviedb.org/movie/615656-meg-2-the-trench#play=dG91B3hHyY4${videoId}`}
+          controls
+          width="100%"
+          height="100%"
+          playing={true}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default VideoPopup;

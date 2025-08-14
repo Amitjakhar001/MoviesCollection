@@ -1,0 +1,81 @@
+@use "../../mixins.scss" as *;
+.collectionPage {
+    min-height: 700px;
+    padding-top: 100px;
+
+    .pageHeader {
+        margin-bottom: 50px;
+        text-align: center;
+
+        h1 {
+            font-size: 48px;
+            color: white;
+            margin-bottom: 10px;
+            @include md {
+                font-size: 60px;
+            }
+        }
+
+        p {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            span {
+                background: var(--gradient);
+                padding: 8px 16px;
+                border-radius: 20px;
+                font-size: 14px;
+                font-weight: 600;
+            }
+        }
+    }
+
+    .content {
+        display: flex;
+        flex-flow: row wrap;
+        gap: 10px;
+        margin-bottom: 50px;
+        @include md {
+            gap: 20px;
+        }
+    }
+
+    .emptyCollection,
+    .notAuthenticated {
+        text-align: center;
+        padding: 100px 20px;
+
+        h1, h2 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 36px;
+        }
+
+        p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .exploreButton,
+        .homeButton {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(248, 158, 0, 0.3);
+            }
+        }
+    }
+}

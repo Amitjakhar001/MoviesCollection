@@ -1,0 +1,17 @@
+@use "../../mixins.scss" as *;
+.authSection {
+    margin-left: 10px !important;
+}
+
+.mobileMenuItems {
+    display: flex;
+    align-items: center;
+    gap: 15px; // Updated gap for auth button
+    @include md {
+        display: none;
+    }
+    svg {
+        font-size: 18px;
+        color: white;
+    }
+}
