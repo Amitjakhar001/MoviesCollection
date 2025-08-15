@@ -1,4 +1,4 @@
-@use "../../../mixins.scss" as *;
+@use "../../../styles/mixins.scss" as *;
 .detailsBanner {
     width: 100%;
     background-color: var(--black);
@@ -179,6 +179,65 @@
                     }
                 }
             }
+
+            // some changes here
+            .detailsSaveBtn {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                background: var(--gradient);
+                color: white;
+                border: none;
+                padding: 12px 20px;
+                border-radius: 25px;
+                cursor: pointer;
+                font-size: 16px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+
+                &:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 15px rgba(248, 158, 0, 0.3);
+                }
+
+                &.saved {
+                    background: rgba(218, 47, 104, 0.2);
+                    border: 2px solid var(--pink);
+                    color: var(--pink);
+                    
+                    &:hover {
+                        background: var(--pink);
+                        color: white;
+                    }
+                }
+
+                &.loading {
+                    opacity: 0.7;
+                    cursor: not-allowed;
+                }
+
+                svg {
+                    font-size: 18px;
+                }
+
+                .spinner {
+                    width: 18px;
+                    height: 18px;
+                    border: 2px solid #ffffff30;
+                    border-top: 2px solid white;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                }
+
+                span {
+                    font-size: 16px;
+                }
+            }
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
         }
     }
 

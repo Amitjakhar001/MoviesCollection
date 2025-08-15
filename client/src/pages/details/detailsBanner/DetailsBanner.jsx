@@ -1,27 +1,34 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { FaBookmark, FaRegBookmark, FaPlay } from "react-icons/fa";
 import dayjs from "dayjs";
+import toast from "react-hot-toast";
 
 import "./style.scss";
 
 import ContentWrapper from "../../../components/contentWrapper/ContentWrapper.jsx";
 import useFetch from "../../../hooks/useFetch.js";
+import useAuth from "../../../hooks/useAuth.js";
 import Genres from "../../../components/genres/Genres.jsx";
 import CircleRating from "../../../components/circleRating/CircleRating.jsx";
 import Img from "../../../components/lazyLoadImage/Img.jsx";
 import PosterFallback from "../../../assets/no-poster.png";
-import { PlayIcon } from "../Playbtn";
-import VideoPopup from "../../../components/videoPopup/VideoPopup";
+import { PlayIcon } from "../Playbtn.jsx";
+import VideoPopup from "../../../components/videoPopup/VideoPopup.jsx";
+import { saveMovie, removeMovie } from "../../../store/slices/moviesSlice.js";
 
 const DetailsBanner = ({ video, crew }) => {
   const [show, setShow] = useState(false);
   const [videoId, setVideoId] = useState(null);
+  const [saveLoading, setSaveLoading] = useState(false);
 
   const { mediaType, id } = useParams();
   const { data, loading } = useFetch(`/${mediaType}/${id}`);
-
   const { url } = useSelector((state) => state.home);
+  const { savedMovies } = useSelector((state) => state.movies);
+  const { isAuthenticated } = useAuth();
+  const dispatch = useDispatch();
 
   const _genres = data?.genres?.map((g) => g.id);
 
@@ -34,6 +41,40 @@ const DetailsBanner = ({ video, crew }) => {
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
     return `${hours}h${minutes > 0 ? ` ${minutes}m` : ""}`;
+  };
+
+  // Check if movie is saved
+  const isSaved = savedMovies.some((movie) => movie.movieId === parseInt(id));
+
+  const handleSaveToggle = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to save movies");
+      return;
+    }
+
+    setSaveLoading(true);
+
+    try {
+      if (isSaved) {
+        await dispatch(removeMovie(parseInt(id))).unwrap();
+        toast.success("Movie removed from collection");
+      } else {
+        const movieData = {
+          movieId: parseInt(id),
+          title: data.name || data.title,
+          poster_path: data.poster_path,
+          release_date: data.release_date || data.first_air_date,
+          vote_average: data.vote_average,
+          media_type: mediaType,
+        };
+        await dispatch(saveMovie(movieData)).unwrap();
+        toast.success("Movie saved to collection");
+      }
+    } catch (error) {
+      toast.error(error || "Something went wrong");
+    } finally {
+      setSaveLoading(false);
+    }
   };
 
   return (
@@ -70,16 +111,46 @@ const DetailsBanner = ({ video, crew }) => {
 
                     <div className="row">
                       <CircleRating rating={data.vote_average.toFixed(1)} />
-                      <div
-                        className="playbtn"
-                        onClick={() => {
-                          setShow(true);
-                          setVideoId(video.key);
-                        }}
+                      {video && (
+                        // In DetailsBanner.jsx
+                        <div
+                          className="playbtn"
+                          onClick={() => {
+                            console.log(
+                              "Play button clicked, videoId:",
+                              video?.key
+                            );
+                            setShow(true);
+                            setVideoId(video.key);
+                          }}
+                        >
+                          <PlayIcon />
+                          <span className="text">Watch Trailer</span>
+                        </div>
+                      )}
+
+                      {/* Save Button */}
+                      <button
+                        className={`detailsSaveBtn ${isSaved ? "saved" : ""} ${
+                          saveLoading ? "loading" : ""
+                        }`}
+                        onClick={handleSaveToggle}
+                        disabled={saveLoading}
+                        title={
+                          isSaved
+                            ? "Remove from collection"
+                            : "Save to collection"
+                        }
                       >
-                        <PlayIcon />
-                        <span className="text">Watch Trailer</span>
-                      </div>
+                        {saveLoading ? (
+                          <div className="spinner"></div>
+                        ) : (
+                          <>
+                            {isSaved ? <FaBookmark /> : <FaRegBookmark />}
+                            <span>{isSaved ? "Saved" : "Save"}</span>
+                          </>
+                        )}
+                      </button>
                     </div>
 
                     <div className="overview">
