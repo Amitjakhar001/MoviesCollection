@@ -5,11 +5,10 @@
     transform: translateY(0);
     width: 100%;
     height: 60px;
-    z-index: 1;
+    z-index: 100; // Increased from 2 to 100
     display: flex;
     align-items: center;
     transition: all ease 0.5s;
-    z-index: 2;
     
     &.top {
         background: rgba(0, 0, 0, 0.25);
@@ -56,6 +55,7 @@
             font-weight: 500;
             position: relative;
             cursor: pointer;
+            transition: color 0.3s ease;
             
             &.searchIcon {
                 margin-right: 0;
@@ -63,6 +63,7 @@
             
             svg {
                 font-size: 18px;
+                transition: color 0.3s ease;
             }
             
             &:hover {
@@ -87,6 +88,12 @@
         svg {
             font-size: 18px;
             color: white;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            
+            &:hover {
+                color: var(--pink);
+            }
         }
     }
 
@@ -104,6 +111,8 @@
             padding: 20px 0;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             animation: mobileMenu 0.3s ease forwards;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 99; // Ensure mobile menu is below header but above content
             
             .menuItem {
                 font-size: 20px;
@@ -114,6 +123,11 @@
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
+                transition: background-color 0.3s ease;
+                
+                &:hover {
+                    background-color: rgba(255, 255, 255, 0.1);
+                }
                 
                 &:last-child {
                     display: none;
@@ -129,6 +143,8 @@
         position: absolute;
         top: 60px;
         animation: mobileMenu 0.3s ease forwards;
+        z-index: 99; // Ensure search bar is below header but above content
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         
         .searchInput {
             display: flex;
@@ -136,28 +152,50 @@
             height: 40px;
             margin-top: 10px;
             width: 100%;
-            
-            svg {
-                font-size: 20px;
-                flex-shrink: 0;
-                margin-left: 10px;
-                cursor: pointer;
-            }
+            gap: 10px;
             
             input {
-                width: 100%;
+                flex: 1;
                 height: 50px;
                 background-color: white;
                 outline: 0;
                 border: 0;
-                border-radius: 30px 0 0 30px;
+                border-radius: 30px;
                 padding: 0 15px;
                 font-size: 14px;
+                color: var(--black);
                 
                 @include md {
                     height: 60px;
                     font-size: 20px;
                     padding: 0 30px;
+                }
+                
+                &::placeholder {
+                    color: rgba(0, 0, 0, 0.5);
+                }
+                
+                &:focus {
+                    box-shadow: 0 0 0 2px var(--pink);
+                }
+            }
+            
+            .closeSearchBtn {
+                font-size: 20px;
+                color: var(--black);
+                cursor: pointer;
+                margin-right: 15px;
+                padding: 8px;
+                border-radius: 50%;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                
+                &:hover {
+                    color: var(--pink);
+                    background-color: rgba(218, 47, 104, 0.1);
+                    transform: scale(1.1);
                 }
             }
         }
@@ -167,8 +205,10 @@
 @keyframes mobileMenu {
     0% {
         transform: translateY(-130%);
+        opacity: 0;
     }
     100% {
         transform: translateY(0);
+        opacity: 1;
     }
 }

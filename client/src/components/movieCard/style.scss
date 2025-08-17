@@ -51,6 +51,7 @@
             top: 30px;
             background-color: white;
             flex-shrink: 0;
+            z-index: 2; // Lower than header but visible
             
             @include md {
                 width: 50px;
@@ -61,6 +62,7 @@
         .genres {
             display: none;
             position: relative;
+            z-index: 2; // Lower than header but visible
             
             @include md {
                 display: flex;
@@ -84,7 +86,9 @@
             color: white;
             cursor: pointer;
             transition: all 0.3s ease;
-            z-index: 2;
+            z-index: 3; // Higher than other card elements but lower than header
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
 
             &:hover {
                 background: rgba(0, 0, 0, 0.9);
@@ -93,10 +97,13 @@
 
             &.saved {
                 color: var(--orange);
+                background: rgba(248, 158, 0, 0.2);
+                border: 1px solid var(--orange);
             }
 
             &.loading {
                 cursor: not-allowed;
+                opacity: 0.7;
             }
 
             svg {

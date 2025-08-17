@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { Routes, Route } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Toaster } from "react-hot-toast";
 import { fetchDataFromApi } from "./utils/api.js";
 import { getApiConfiguration, getGenres } from "./store/slices/homeSlice.js";
@@ -23,25 +23,9 @@ import PageNotFound from "./pages/404/PageNotFound.jsx";
 
 function App() {
   const dispatch = useDispatch();
-  const { url } = useSelector((state) => state.home);
   const { isAuthenticated, loading: authLoading } = useAuth();
 
-  useEffect(() => {
-    fetchApiConfig();
-    genresCall();
-
-    // Check authentication status on app load
-    dispatch(checkAuth());
-  }, [dispatch]);
-
-  // Fetch saved movies when user is authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-      dispatch(fetchSavedMovies());
-    }
-  }, [isAuthenticated, dispatch]);
-
-  const fetchApiConfig = () => {
+  const fetchApiConfig = useCallback(() => {
     fetchDataFromApi("/configuration").then((res) => {
       const url = {
         backdrop: res.images.secure_base_url + "original",
@@ -50,9 +34,9 @@ function App() {
       };
       dispatch(getApiConfiguration(url));
     });
-  };
+  }, [dispatch]);
 
-  const genresCall = async () => {
+  const genresCall = useCallback(async () => {
     let promises = [];
     let endPoints = ["tv", "movie"];
     let allGenres = {};
@@ -67,7 +51,22 @@ function App() {
     });
 
     dispatch(getGenres(allGenres));
-  };
+  }, [dispatch]);
+
+  useEffect(() => {
+    fetchApiConfig();
+    genresCall();
+
+    // Check authentication status on app load
+    dispatch(checkAuth());
+  }, [dispatch, fetchApiConfig, genresCall]);
+
+  // Fetch saved movies when user is authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(fetchSavedMovies());
+    }
+  }, [isAuthenticated, dispatch]);
 
   // Show loading spinner while checking authentication
   if (authLoading) {

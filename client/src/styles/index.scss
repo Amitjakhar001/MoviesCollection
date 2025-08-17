@@ -63,3 +63,29 @@ body {
         }
     }
 }
+
+/* React Select Global Overrides */
+.react-select__menu-portal {
+    z-index: 50 !important; /* Ensure portaled menus have correct z-index */
+}
+
+/* Dark theme for all react-select instances in your app */
+.react-select-container {
+    .react-select__control {
+        &--is-disabled {
+            background-color: var(--black-lighter) !important;
+            opacity: 0.6;
+        }
+    }
+    
+    .react-select__menu {
+        /* Ensure consistent styling across all selects */
+        .react-select__group-heading {
+            color: var(--pink);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+            padding: 8px 16px 4px 16px;
+        }
+    }
+}

@@ -1,11 +1,14 @@
 @use "../../styles/mixins.scss" as *;
+
 .explorePage {
     min-height: 700px;
     padding-top: 100px;
+    
     .resultNotFound {
         font-size: 24px;
         color: var(--black-light);
     }
+    
     .pageHeader {
         display: flex;
         justify-content: space-between;
@@ -15,6 +18,7 @@
             flex-direction: row;
         }
     }
+    
     .pageTitle {
         font-size: 24px;
         line-height: 34px;
@@ -24,6 +28,7 @@
             margin-bottom: 0;
         }
     }
+    
     .filters {
         display: flex;
         gap: 10px;
@@ -31,6 +36,7 @@
         @include md {
             flex-direction: row;
         }
+        
         .react-select-container {
             &.genresDD {
                 width: 100%;
@@ -46,45 +52,127 @@
                     width: 250px;
                 }
             }
+            
             .react-select__control {
                 border: 0;
                 outline: 0;
                 box-shadow: none;
                 background-color: var(--black-light);
                 border-radius: 20px;
+                min-height: 44px;
+                
                 .react-select__value-container {
                     .react-select__placeholder,
                     .react-select__input-container {
                         color: white;
                         margin: 0 10px;
                     }
+                    
+                    .react-select__input {
+                        color: white;
+                    }
                 }
+                
                 .react-select__single-value {
                     color: white;
                 }
+                
                 .react-select__multi-value {
                     background-color: var(--black3);
                     border-radius: 10px;
+                    margin: 2px;
+                    
                     .react-select__multi-value__label {
                         color: white;
+                        padding: 3px 6px;
                     }
+                    
                     .react-select__multi-value__remove {
                         background-color: transparent;
                         color: white;
                         cursor: pointer;
+                        border-radius: 0 10px 10px 0;
+                        
                         &:hover {
-                            color: var(--black-lighter);
+                            background-color: var(--pink);
+                            color: white;
                         }
                     }
                 }
+                
+                .react-select__indicators {
+                    .react-select__dropdown-indicator {
+                        color: white;
+                        
+                        &:hover {
+                            color: var(--pink);
+                        }
+                    }
+                    
+                    .react-select__clear-indicator {
+                        color: white;
+                        
+                        &:hover {
+                            color: var(--pink);
+                        }
+                    }
+                }
+                
+                &:hover {
+                    border-color: var(--pink);
+                }
+                
+                &.react-select__control--is-focused {
+                    border-color: var(--pink);
+                    box-shadow: 0 0 0 1px var(--pink);
+                }
             }
+            
             .react-select__menu {
-                top: 40px;
-                margin: 0;
-                padding: 0;
+                background-color: var(--black-light);
+                border: 1px solid var(--black-lighter);
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+                z-index: 50; // Higher than movie cards but lower than header
+                margin-top: 4px;
+                
+                .react-select__menu-list {
+                    padding: 4px 0;
+                    max-height: 200px;
+                    
+                    .react-select__option {
+                        background-color: transparent;
+                        color: white;
+                        padding: 12px 16px;
+                        cursor: pointer;
+                        
+                        &:hover {
+                            background-color: var(--black-lighter);
+                        }
+                        
+                        &.react-select__option--is-focused {
+                            background-color: var(--black-lighter);
+                        }
+                        
+                        &.react-select__option--is-selected {
+                            background-color: var(--pink);
+                            color: white;
+                        }
+                    }
+                }
+                
+                .react-select__no-options-message {
+                    color: white;
+                    padding: 12px 16px;
+                }
+            }
+            
+            .react-select__input-container {
+                color: white;
             }
         }
     }
+    
     .content {
         display: flex;
         flex-flow: row wrap;
@@ -93,6 +181,7 @@
         @include md {
             gap: 20px;
         }
+        
         .movieCard {
             .posterBlock {
                 margin-bottom: 30px;

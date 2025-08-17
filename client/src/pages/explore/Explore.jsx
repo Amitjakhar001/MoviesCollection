@@ -1,10 +1,9 @@
-// Update imports
 import useFetch from "../../hooks/useFetch.js";
 import { fetchDataFromApi } from "../../utils/api.js";
 import ContentWrapper from "../../components/contentWrapper/ContentWrapper.jsx";
 import MovieCard from "../../components/movieCard/MovieCard.jsx";
 import Spinner from "../../components/spinner/Spinner.jsx";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Select from "react-select";
@@ -35,22 +34,22 @@ const Explore = () => {
 
   const { data: genresData } = useFetch(`/genre/${mediaType}/list`);
 
-  const fetchInitialData = () => {
+  const fetchInitialData = useCallback(() => {
     setLoading(true);
     fetchDataFromApi(`/discover/${mediaType}`, filters).then((res) => {
       setData(res);
       setPageNum((prev) => prev + 1);
       setLoading(false);
     });
-  };
+  }, [mediaType]);
 
-  const fetchNextPageData = () => {
+  const fetchNextPageData = useCallback(() => {
     fetchDataFromApi(`/discover/${mediaType}?page=${pageNum}`, filters).then(
       (res) => {
         if (data?.results) {
           setData({
             ...data,
-            results: [...data?.results, ...res.results],
+            results: [...(data.results || []), ...(res.results || [])],
           });
         } else {
           setData(res);
@@ -58,7 +57,7 @@ const Explore = () => {
         setPageNum((prev) => prev + 1);
       }
     );
-  };
+  }, [mediaType, pageNum, data]);
 
   useEffect(() => {
     filters = {};
@@ -67,7 +66,7 @@ const Explore = () => {
     setSortby(null);
     setGenre(null);
     fetchInitialData();
-  }, [mediaType]);
+  }, [mediaType, fetchInitialData]);
 
   const onChange = (selectedItems, action) => {
     if (action.name === "sortby") {
@@ -133,13 +132,13 @@ const Explore = () => {
             {data?.results?.length > 0 ? (
               <InfiniteScroll
                 className="content"
-                dataLength={data?.results?.length || []}
+                dataLength={data?.results?.length || 0}
                 next={fetchNextPageData}
-                hasMore={pageNum <= data?.total_pages}
+                hasMore={pageNum <= (data?.total_pages || 0)}
                 loader={<Spinner />}
               >
                 {data?.results?.map((item, index) => {
-                  if (item.media_type === "person") return;
+                  if (item.media_type === "person") return null;
                   return (
                     <MovieCard key={index} data={item} mediaType={mediaType} />
                   );
@@ -156,5 +155,3 @@ const Explore = () => {
 };
 
 export default Explore;
-
-
